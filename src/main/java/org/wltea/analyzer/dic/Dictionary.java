@@ -118,13 +118,13 @@ public class Dictionary {
 
 		InputStream input = null;
 		try {
-//			logger.info("try load config from {}", configFile);
+			logger.info("try load config from {}", configFile);
 			input = new FileInputStream(configFile.toFile());
 		} catch (FileNotFoundException e) {
 			conf_dir = cfg.getConfigInPluginDir();
 			configFile = conf_dir.resolve(FILE_NAME);
 			try {
-//				logger.info("try load config from {}", configFile);
+				logger.info("try load config from {}", configFile);
 				input = new FileInputStream(configFile.toFile());
 			} catch (FileNotFoundException ex) {
 				// We should report origin exception
@@ -525,12 +525,7 @@ public class Dictionary {
 			Path file = PathUtils.get(getDictRoot(), "jdbc-reload.properties");
 			prop.load(new FileInputStream(file.toFile()));
 
-//			logger.info("config/jdbc-reload.properties");
-//			for (Object key : prop.keySet()) {
-//				logger.info(key + "=" + prop.getProperty(String.valueOf(key)));
-//			}
-
-//			logger.info("query hot dict from mysql，" + prop.getProperty("jdbc.reload.sql"));
+			logger.info("load hot dict from mysql , start");
 
 			conn = DriverManager.getConnection(
 					prop.getProperty("jdbc.url"),
@@ -542,9 +537,10 @@ public class Dictionary {
 
 			while (rs.next()){
 				String word = rs.getString("word");
-//				logger.info("hot word from mysql：" + word);
 				_MainDict.fillSegment(word.trim().toCharArray());
 			}
+
+			logger.info("load hot dict from mysql , end");
 		} catch (Exception e){
 			logger.error("error",e);
 		} finally {
